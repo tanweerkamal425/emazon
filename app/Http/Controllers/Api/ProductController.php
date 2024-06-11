@@ -274,4 +274,13 @@ class ProductController extends Controller
 
         return new ProductResource($product);
     }
+
+    public function delete(int $id)
+    {
+        $product = Product::find($id);
+
+        $product->delete();
+
+        return $product;
+    }
 }
