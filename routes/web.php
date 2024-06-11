@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/order/success", [OrderController::class, 'success'])->name('order.success');
     Route::get("/order/failure", [OrderController::class, 'failure'])->name('order.failure');
     Route::get("/order/show/", [OrderController::class, 'show'])->name('order.show');
+    Route::get('/order/{id}/download-invoice', [OrderController::class, 'downloadInvoice']);
 
     Route::get('/user/{id}', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/{id}/upload', [UserController::class, 'image'])->name('user.image');

@@ -81,6 +81,9 @@
         <a href="/order/{{$order->id}}">
             See orders
         </a>
+        <a target="_blank" href="/order/{{$order->id}}/download-invoice">
+            Download invoice
+        </a>
     </div>
     <hr>
 </body>

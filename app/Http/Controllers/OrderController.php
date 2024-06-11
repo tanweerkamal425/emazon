@@ -9,6 +9,7 @@ use Razorpay\Api\Api;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Konekt\PdfInvoice\InvoicePrinter;
 
 class OrderController extends Controller
 {
@@ -149,5 +150,51 @@ class OrderController extends Controller
     public function failure()
     {
         return view('order.failure');
+    }
+
+    public function downloadInvoice(Request $request, int $id)
+    {
+        $order = Order::find($id);
+        if (is_null($order)) {
+            abort(404);
+        }
+
+        $user = $order->user()->first();
+        $order_items = $order->orderItems()->get();
+
+        $invoice = new InvoicePrinter("A4", "₹ ");
+
+        $invoice->addCustomHeader("Emazon", "value");
+
+        // header settings
+        $invoice->setLogo(public_path('assets/img/logo.png'));
+        $invoice->setColor("#007fff");
+        $invoice->setType("Sale Invoice");    // Invoice Type
+        $invoice->setReference($order->id);   // Reference
+        $invoice->setDate(date('M dS ,Y', strtotime($order->created_at)));   //Billing Date
+        $invoice->setTime(date('h:i:s A', strtotime($order->created_at)));   //Billing Time
+        $invoice->setFrom(array("Seller Name", "Sample Company Name", "128 AA Juanita Ave","Glendora , CA 91740"));
+        $invoice->setTo(array("Purchaser Name", $user->fullName(), "128 AA Juanita Ave","Glendora , CA 91740"));
+
+        foreach ($order_items as $oi) {
+            $product = $oi->product()->first();
+
+            $invoice->addItem(
+                $product->title,
+                $product->description,
+                $oi->qty,
+                false,
+                $oi->price_sp,
+                $oi->discount,
+                $oi->price_sp * $oi->qty
+            );
+        }
+
+        $invoice->addTotal("Total", $order->amount);
+        $invoice->addBadge("Payment Paid");
+        $invoice->addTitle("Important notice");
+        $invoice->addParagraph("No item will be replaced or refunded if you do not have the invoice with you");
+        $invoice->setFooterNote(env("APP_NAME"));
+        $invoice->render("invoice-{$order->id}.pdf","I");
     }
 }

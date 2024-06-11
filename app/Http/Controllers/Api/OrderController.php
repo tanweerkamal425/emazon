@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
+use Konekt\PdfInvoice\InvoicePrinter;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
