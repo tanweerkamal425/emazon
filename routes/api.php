@@ -10,9 +10,11 @@ use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ProductColorController;
 use App\Http\Controllers\Api\ProductImageController;
 use App\Http\Controllers\Api\ProductSizeController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +114,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     // users api
     Route::get('/v1/users', [UserController::class, 'index']);
     Route::get('/v1/users/{id}', [UserController::class, 'show']);
+
+    //dashboard
+    Route::get('/v1/dashboard', [DashboardController::class, 'dashboard']);
 // });
 
 
